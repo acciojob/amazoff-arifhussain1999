@@ -100,11 +100,17 @@ public class OrderRepository {
 
     public static String getLastDeliveryTimeByPartnerId(String partnerId) {
         List<Order> orderList = listHashMap.get(partnerId);
+        int last=Integer.MIN_VALUE;
         if (!orderList.isEmpty()) {
-            Order lastOrder = orderList.get(orderList.size() - 1);
-            int deliveryTimeInMinutes = lastOrder.getDeliveryTime();
+           for(Order order : orderList)
+           {
+              int time =order.getDeliveryTime();
+              last = Math.max(time,last);
+           }
+            int deliveryTimeInMinutes = last;
             int hours = deliveryTimeInMinutes / 60;
             int minutes = deliveryTimeInMinutes % 60;
+
             return String.format("%02d:%02d", hours, minutes);
         }
 

@@ -41,7 +41,7 @@ OrderService orderService;
     }
 
     @GetMapping("/get-order-by-id/{orderId}")
-    public ResponseEntity<Order> getOrderById(@PathVariable String orderId){
+    public ResponseEntity<Order> getOrderById(@PathVariable("orderId") String orderId){
 
         Order order= OrderService.getOrderById(orderId);
         //order should be returned with an orderId.
@@ -50,7 +50,7 @@ OrderService orderService;
     }
 
     @GetMapping("/get-partner-by-id/{partnerId}")
-    public ResponseEntity<DeliveryPartner> getPartnerById(@PathVariable String partnerId){
+    public ResponseEntity<DeliveryPartner> getPartnerById(@PathVariable("partnerId") String partnerId){
 
         DeliveryPartner deliveryPartner = OrderService.getPartnerById(partnerId);
 

@@ -8,9 +8,10 @@ import java.util.List;
 
 @Repository
 public class OrderRepository {
-   static HashMap<String,Order> orderHashMap= new HashMap<>();
-   static HashMap<String,DeliveryPartner> deliveryPartnerHashMap=new HashMap<>();
+    static HashMap<String,Order> orderHashMap= new HashMap<>();
+    static HashMap<String,DeliveryPartner> deliveryPartnerHashMap=new HashMap<>();
     static HashMap<String,List<Order>> listHashMap = new HashMap<>();
+    static HashMap<String,String> assignedOrderMap = new HashMap<>();
     public static void addOrder(Order order) {
         String orderID= order.getId();
         orderHashMap.put(orderID,order);
@@ -29,6 +30,12 @@ public class OrderRepository {
             orderList.add(order);
             listHashMap.put(partnerId,orderList);
         }
+        DeliveryPartner partnerOrder = deliveryPartnerHashMap.get(partnerId);
+        int noOfOrders = partnerOrder.getNumberOfOrders();
+        partnerOrder.setNumberOfOrders(noOfOrders+1);
+
+        //Now order has been assigned
+        assignedOrderMap.put(orderId, partnerId);
     }
 
     public static Order getOrderById(String orderId) {
@@ -105,10 +112,42 @@ public class OrderRepository {
     }
 
     public static void deletePartnerById(String partnerId) {
+        List<Order> orders = listHashMap.get(partnerId);
 
+        for(Order order : orders)
+        {
+            assignedOrderMap.remove(order.getId());
+        }
+
+        listHashMap.remove(partnerId);
     }
 
     public static void deleteOrderById(String orderId) {
+        orderHashMap.remove(orderId);
+
+
+       if(assignedOrderMap.containsKey(orderId))
+       {
+           String partnerId = assignedOrderMap.get(orderId);
+           DeliveryPartner deliveryPartner = deliveryPartnerHashMap.get(partnerId);
+           int noOfOrders = deliveryPartner.getNumberOfOrders();
+           deliveryPartner.setNumberOfOrders(noOfOrders-1);
+
+           assignedOrderMap.remove(orderId);
+
+           List<Order> orderList = listHashMap.get(deliveryPartner.getId());
+
+           for(Order order : orderList)
+           {
+               String s = order.getId();
+               if(s.equals(orderId))
+               {
+                   orderList.remove(order);
+                   return;
+               }
+           }
+       }
+
     }
 
     public static Integer getOrderCountByPartnerId(String partnerId) {

@@ -62,30 +62,18 @@ public class OrderRepository {
 
     public static Integer getCountOfUnassignedOrders() {
         int ans=0;
-        List<Order> orderList=new ArrayList<>(orderHashMap.values());
-        HashMap<Order,Integer> map=new HashMap<>();
-        for(List<Order> list : listHashMap.values())
-        {
-            for(Order order : list)
-            {
-                map.put(order,map.getOrDefault(order,0)+1);
-            }
-        }
-        for(Order order:orderList)
-        {
-            if(!map.containsKey(order))
-            {
-                ans++;
-            }
-        }
-        return ans;
+       int orderSize=orderHashMap.size();
+       int assignedOrder=assignedOrderMap.size();
+       ans = orderSize-assignedOrder;
+        Integer integer = ans;
+        return integer;
     }
 
     public static Integer getOrdersLeftAfterGivenTimeByPartnerId(String time, String partnerId) {
         int ordersLeft=0;
-        String[] timeParts = time.split(":");
-        int targetHours = Integer.parseInt(timeParts[0]);
-        int targetMinutes = Integer.parseInt(timeParts[1]);
+
+        int targetHours = Integer.parseInt(time.substring(0,2));
+        int targetMinutes = Integer.parseInt(time.substring(3));
         int targetTimeInMinutes=targetHours * 60 + targetMinutes;
 
         List<Order> orderList = listHashMap.getOrDefault(partnerId, new ArrayList<>());
@@ -95,7 +83,8 @@ public class OrderRepository {
                 ordersLeft++;
             }
         }
-        return ordersLeft;
+        Integer integer=ordersLeft;
+        return integer;
     }
 
     public static String getLastDeliveryTimeByPartnerId(String partnerId) {

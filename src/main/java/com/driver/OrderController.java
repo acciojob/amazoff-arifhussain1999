@@ -28,7 +28,7 @@ OrderService orderService;
     }
 
     @PostMapping("/add-partner/{partnerId}")
-    public ResponseEntity<String> addPartner(@PathVariable String partnerId){
+    public ResponseEntity<String> addPartner(@PathVariable("partnerId") String partnerId){
         OrderService.addPartner(partnerId);
         return new ResponseEntity<>("New delivery partner added successfully", HttpStatus.CREATED);
     }
@@ -95,8 +95,8 @@ OrderService orderService;
         return new ResponseEntity<>(countOfOrders, HttpStatus.CREATED);
     }
 
-    @GetMapping("/get-count-of-orders-left-after-given-time/{partnerId}")
-    public ResponseEntity<Integer> getOrdersLeftAfterGivenTimeByPartnerId(@PathVariable String time, @PathVariable String partnerId){
+    @GetMapping("/get-count-of-orders-left-after-given-time/{partnerId}/{time}")
+    public ResponseEntity<Integer> getOrdersLeftAfterGivenTimeByPartnerId(@PathVariable("time") String time, @PathVariable("partnerId") String partnerId){
 
         Integer countOfOrders = OrderService.getOrdersLeftAfterGivenTimeByPartnerId(time,partnerId);
 

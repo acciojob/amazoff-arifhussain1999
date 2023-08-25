@@ -30,10 +30,6 @@ public class OrderRepository {
             orderList.add(order);
             listHashMap.put(partnerId,orderList);
         }
-        DeliveryPartner partnerOrder = deliveryPartnerHashMap.get(partnerId);
-        int noOfOrders = partnerOrder.getNumberOfOrders();
-        partnerOrder.setNumberOfOrders(noOfOrders+1);
-
         //Now order has been assigned
         assignedOrderMap.put(orderId, partnerId);
     }
@@ -44,12 +40,12 @@ public class OrderRepository {
     }
 
     public static DeliveryPartner getPartnerById(String partnerId) {
-        return deliveryPartnerHashMap.getOrDefault(partnerId,null);
+        return deliveryPartnerHashMap.get(partnerId);
     }
 
     public static List<String> getOrdersByPartnerId(String partnerId) {
         ArrayList<String> orderNames= new ArrayList<>();
-        List<Order> orderList=listHashMap.get(partnerId);
+        List<Order> orderList=listHashMap.getOrDefault(partnerId,new ArrayList<>());
         for(Order order : orderList){
             orderNames.add(order.getId());
         }
@@ -88,7 +84,7 @@ public class OrderRepository {
     }
 
     public static String getLastDeliveryTimeByPartnerId(String partnerId) {
-        List<Order> orderList = listHashMap.get(partnerId);
+        List<Order> orderList = listHashMap.getOrDefault(partnerId,new ArrayList<>());
         int last=Integer.MIN_VALUE;
         if (!orderList.isEmpty()) {
            for(Order order : orderList)
@@ -125,12 +121,12 @@ public class OrderRepository {
        {
            String partnerId = assignedOrderMap.get(orderId);
            DeliveryPartner deliveryPartner = deliveryPartnerHashMap.get(partnerId);
-           int noOfOrders = deliveryPartner.getNumberOfOrders();
-           deliveryPartner.setNumberOfOrders(noOfOrders-1);
+//           int noOfOrders = deliveryPartner.getNumberOfOrders();
+//           deliveryPartner.setNumberOfOrders(noOfOrders-1);
 
            assignedOrderMap.remove(orderId);
 
-           List<Order> orderList = listHashMap.get(deliveryPartner.getId());
+           List<Order> orderList = listHashMap.getOrDefault(deliveryPartner.getId(),new ArrayList<>());
 
            for(Order order : orderList)
            {
@@ -146,7 +142,10 @@ public class OrderRepository {
     }
 
     public static Integer getOrderCountByPartnerId(String partnerId) {
-        List<Order> orderList=listHashMap.getOrDefault(partnerId,new ArrayList<>());
-        return orderList.size();
+      int ans =0;
+      List<Order> orderList=listHashMap.getOrDefault(partnerId,new ArrayList<>());
+      ans=orderList.size();
+      Integer integer=ans;
+      return integer;
     }
 }

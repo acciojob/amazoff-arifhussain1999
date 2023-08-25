@@ -23,10 +23,12 @@ public class OrderService {
     }
 
     public static Order getOrderById(String orderId) {
+
         return OrderRepository.getOrderById(orderId);
     }
 
     public static DeliveryPartner getPartnerById(String partnerId) {
+
         return OrderRepository.getPartnerById(partnerId);
     }
 
@@ -35,10 +37,12 @@ public class OrderService {
     }
 
     public static List<String> getAllOrders() {
+
         return OrderRepository.getAllOrders();
     }
 
     public static Integer getCountOfUnassignedOrders() {
+
         return OrderRepository.getCountOfUnassignedOrders();
     }
 
@@ -51,6 +55,7 @@ public class OrderService {
     }
 
     public static void deletePartnerById(String partnerId) {
+
         OrderRepository.deletePartnerById(partnerId);
     }
 

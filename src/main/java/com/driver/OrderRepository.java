@@ -79,8 +79,8 @@ public class OrderRepository {
                 ordersLeft++;
             }
         }
-        Integer integer=ordersLeft;
-        return integer;
+
+        return ordersLeft;
     }
 
     public static String getLastDeliveryTimeByPartnerId(String partnerId) {
@@ -92,14 +92,13 @@ public class OrderRepository {
               int time =order.getDeliveryTime();
               last = Math.max(time,last);
            }
-            int deliveryTimeInMinutes = last;
-            int hours = deliveryTimeInMinutes / 60;
-            int minutes = deliveryTimeInMinutes % 60;
 
-            return String.format("%02d:%02d", hours, minutes);
         }
+        int deliveryTimeInMinutes = last;
+        int hours = deliveryTimeInMinutes / 60;
+        int minutes = deliveryTimeInMinutes % 60;
 
-        return null;
+        return String.format("%02d:%02d", hours, minutes);
     }
 
     public static void deletePartnerById(String partnerId) {

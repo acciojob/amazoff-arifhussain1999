@@ -95,8 +95,8 @@ OrderService orderService;
         return new ResponseEntity<>(countOfOrders, HttpStatus.CREATED);
     }
 
-    @GetMapping("/get-count-of-orders-left-after-given-time/{partnerId}/{time}")
-    public ResponseEntity<Integer> getOrdersLeftAfterGivenTimeByPartnerId(@PathVariable("time") String time, @PathVariable("partnerId") String partnerId){
+    @GetMapping("/get-count-of-orders-left-after-given-time/{partnerId}")
+    public ResponseEntity<Integer> getOrdersLeftAfterGivenTimeByPartnerId(@PathVariable String time, @PathVariable String partnerId){
 
         Integer countOfOrders = OrderService.getOrdersLeftAfterGivenTimeByPartnerId(time,partnerId);
 

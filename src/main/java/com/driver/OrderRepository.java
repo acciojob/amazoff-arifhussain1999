@@ -8,20 +8,20 @@ import java.util.List;
 
 @Repository
 public class OrderRepository {
-    static HashMap<String,Order> orderHashMap= new HashMap<>();
-    static HashMap<String,DeliveryPartner> deliveryPartnerHashMap=new HashMap<>();
-    static HashMap<String,List<String>> listHashMap = new HashMap<>();
-    static HashMap<String,String> assignedOrderMap = new HashMap<>();
-    public static void addOrder(Order order) {
+    HashMap<String,Order> orderHashMap= new HashMap<>();
+    HashMap<String,DeliveryPartner> deliveryPartnerHashMap=new HashMap<>();
+    HashMap<String,List<String>> listHashMap = new HashMap<>();
+    HashMap<String,String> assignedOrderMap = new HashMap<>();
+    public void addOrder(Order order) {
         String orderID= order.getId();
         orderHashMap.put(orderID,order);
     }
 
-    public static void addPartner(String partnerId) {
+    public void addPartner(String partnerId) {
         deliveryPartnerHashMap.put(partnerId, new DeliveryPartner(partnerId));
     }
 
-    public static void addOrderPartnerPair(String orderId, String partnerId) {
+    public void addOrderPartnerPair(String orderId, String partnerId) {
         if(orderHashMap.containsKey(orderId) && deliveryPartnerHashMap.containsKey(partnerId))
         {
             List<String> orderList=listHashMap.getOrDefault(partnerId,new ArrayList<>());
@@ -33,47 +33,41 @@ public class OrderRepository {
         assignedOrderMap.put(orderId, partnerId);
     }
 
-    public static Order getOrderById(String orderId) {
+    public Order getOrderById(String orderId) {
 
         return orderHashMap.get(orderId);
     }
 
-    public static DeliveryPartner getPartnerById(String partnerId) {
+    public DeliveryPartner getPartnerById(String partnerId) {
         return deliveryPartnerHashMap.get(partnerId);
     }
 
-    public static List<String> getOrdersByPartnerId(String partnerId) {
+    public List<String> getOrdersByPartnerId(String partnerId) {
         return listHashMap.get(partnerId);
     }
 
-    public static List<String> getAllOrders() {
+    public List<String> getAllOrders() {
 
         return new ArrayList<>(orderHashMap.keySet());
     }
 
-    public static Integer getCountOfUnassignedOrders() {
+    public Integer getCountOfUnassignedOrders() {
         return orderHashMap.size()-assignedOrderMap.size();
     }
 
-    public static Integer getOrdersLeftAfterGivenTimeByPartnerId(String time, String partnerId) {
-        int ordersLeft=0;
+    public Integer getOrdersLeftAfterGivenTimeByPartnerId(int time, String partnerId) {
+        int count = 0;
 
-        int targetHours = Integer.parseInt(time.substring(0,2));
-        int targetMinutes = Integer.parseInt(time.substring(3));
-        int targetTimeInMinutes=targetHours * 60 + targetMinutes;
-
-        List<String> orderList = listHashMap.get(partnerId);
-        for (String order : orderList) {
-            int deliveryTimeInMinutes = orderHashMap.get(order).getDeliveryTime();
-            if (deliveryTimeInMinutes > targetTimeInMinutes) {
-                ordersLeft++;
+        List<String> ordersToCheck = listHashMap.get(partnerId);
+        for(String orderID: ordersToCheck){
+            if(orderHashMap.get(orderID).getDeliveryTime()>time){
+                count++;
             }
         }
-
-        return ordersLeft;
+        return count;
     }
 
-    public static String getLastDeliveryTimeByPartnerId(String partnerId) {
+    public String getLastDeliveryTimeByPartnerId(String partnerId) {
         List<String> orderList = listHashMap.getOrDefault(partnerId,new ArrayList<>());
         int last=Integer.MIN_VALUE;
         if (!orderList.isEmpty()) {
@@ -99,7 +93,7 @@ public class OrderRepository {
         return HH+':'+MM;
     }
 
-    public static void deletePartnerById(String partnerId) {
+    public void deletePartnerById(String partnerId) {
         List<String> orders = listHashMap.get(partnerId);
 
         for(String order : orders)
@@ -110,7 +104,7 @@ public class OrderRepository {
         listHashMap.remove(partnerId);
     }
 
-    public static void deleteOrderById(String orderId) {
+    public void deleteOrderById(String orderId) {
 
            orderHashMap.remove(orderId);
            String partnerId = assignedOrderMap.get(orderId);
@@ -118,7 +112,7 @@ public class OrderRepository {
            deliveryPartnerHashMap.get(partnerId).setNumberOfOrders(deliveryPartnerHashMap.get(partnerId).getNumberOfOrders()-1);
            assignedOrderMap.remove(orderId);
     }
-    public static Integer getOrderCountByPartnerId(String partnerId) {
+    public Integer getOrderCountByPartnerId(String partnerId) {
       return deliveryPartnerHashMap.get(partnerId).getNumberOfOrders();
     }
 }
